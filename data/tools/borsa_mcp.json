@@ -1,0 +1,1977 @@
+[
+  {
+    "type": "function",
+    "function": {
+      "name": "search_symbol",
+      "description": "Search stocks, indices, funds, or crypto by name/symbol across BIST, US, crypto, and fund markets.",
+      "parameters": {
+        "properties": {
+          "query": {
+            "description": "Search term: company name, ticker, or keyword",
+            "examples": [
+              "Garanti",
+              "AAPL",
+              "Bitcoin"
+            ],
+            "minLength": 2,
+            "type": "string"
+          },
+          "market": {
+            "description": "Target market: bist, us, crypto_tr, crypto_global, fund",
+            "enum": [
+              "bist",
+              "us",
+              "crypto",
+              "fx",
+              "fund"
+            ],
+            "examples": [
+              "bist",
+              "us",
+              "fund"
+            ],
+            "type": "string"
+          },
+          "limit": {
+            "default": 10,
+            "description": "Max results (1-50)",
+            "maximum": 50,
+            "minimum": 1,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "query",
+          "market"
+        ],
+        "type": "object",
+        "additionalProperties": false
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "get_profile",
+      "description": "Get company profile with sector, financials, key metrics, and optional Islamic compliance (BIST).",
+      "parameters": {
+        "properties": {
+          "symbol": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            ],
+            "description": "Symbol(s), max 10: 'GARAN' or ['GARAN', 'AKBNK']",
+            "examples": [
+              "GARAN",
+              "AAPL",
+              [
+                "GARAN",
+                "AKBNK"
+              ]
+            ]
+          },
+          "market": {
+            "description": "Market: bist, us, or fund",
+            "enum": [
+              "bist",
+              "us",
+              "fund"
+            ],
+            "examples": [
+              "bist",
+              "us",
+              "fund"
+            ],
+            "type": "string"
+          },
+          "include_islamic": {
+            "default": false,
+            "description": "Include Sharia compliance info (BIST only)",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "symbol",
+          "market"
+        ],
+        "type": "object",
+        "additionalProperties": false
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "get_quote",
+      "description": "What is it worth right now: stocks (with P/E, P/B, 52w range), currencies, metals and crypto. Batch up to 10.",
+      "parameters": {
+        "properties": {
+          "symbol": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            ],
+            "description": "Symbol(s), max 10. Stocks: GARAN, AAPL. FX and metals: USD, EUR, gram-altin, BRENT. Crypto pairs: BTCTRY, BTC-USD.",
+            "examples": [
+              "GARAN",
+              [
+                "GARAN",
+                "AKBNK"
+              ],
+              "gram-altin",
+              "BTCTRY"
+            ]
+          },
+          "market": {
+            "description": "Market: bist, us, fx, or crypto",
+            "enum": [
+              "bist",
+              "us",
+              "fx",
+              "crypto"
+            ],
+            "examples": [
+              "bist",
+              "fx",
+              "crypto"
+            ],
+            "type": "string"
+          },
+          "exchange": {
+            "anyOf": [
+              {
+                "enum": [
+                  "btcturk",
+                  "coinbase"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Crypto exchange: btcturk or coinbase. Inferred from the pair when omitted."
+          }
+        },
+        "required": [
+          "symbol",
+          "market"
+        ],
+        "type": "object",
+        "additionalProperties": false
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "get_historical_data",
+      "description": "Get OHLCV price history with date range or period (1d-5y). Supports BIST, US, and crypto.",
+      "parameters": {
+        "properties": {
+          "symbol": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            ],
+            "description": "Symbol(s), max 10. Stocks: GARAN, AAPL. FX: gram-altin, USD. Crypto pairs: BTCTRY, BTC-USD. Fund codes: TI2.",
+            "examples": [
+              "GARAN",
+              "AAPL",
+              "BTCTRY",
+              "gram-altin"
+            ]
+          },
+          "market": {
+            "description": "Market: bist, us, crypto, fx, or fund",
+            "enum": [
+              "bist",
+              "us",
+              "fx",
+              "crypto",
+              "fund"
+            ],
+            "examples": [
+              "bist",
+              "us",
+              "crypto",
+              "fx"
+            ],
+            "type": "string"
+          },
+          "period": {
+            "anyOf": [
+              {
+                "enum": [
+                  "1d",
+                  "5d",
+                  "1mo",
+                  "3mo",
+                  "6mo",
+                  "1y",
+                  "2y",
+                  "5y",
+                  "ytd",
+                  "max"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Time period: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, ytd, max. Mutually exclusive with start_date/end_date."
+          },
+          "start_date": {
+            "anyOf": [
+              {
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Start date (YYYY-MM-DD). Mutually exclusive with period."
+          },
+          "end_date": {
+            "anyOf": [
+              {
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "End date (YYYY-MM-DD). Mutually exclusive with period."
+          },
+          "exchange": {
+            "anyOf": [
+              {
+                "enum": [
+                  "btcturk",
+                  "coinbase"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Crypto exchange: btcturk or coinbase. Inferred from the pair when omitted (BTCTRY→btcturk, BTC-USD→coinbase)."
+          },
+          "adjust": {
+            "default": true,
+            "description": "True (default)=split-adjusted, correct for return calculations. False=raw exchange prices, which show a cliff across a split (BIST only)",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "symbol",
+          "market"
+        ],
+        "type": "object",
+        "additionalProperties": false
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "get_technical_analysis",
+      "description": "Get technical indicators: RSI, MACD, Bollinger Bands, moving averages, and trend signals.",
+      "parameters": {
+        "properties": {
+          "symbol": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            ],
+            "description": "Symbol(s), max 10: 'GARAN' or ['GARAN', 'AKBNK']",
+            "examples": [
+              "GARAN",
+              "AAPL",
+              "BTCTRY",
+              [
+                "GARAN",
+                "AKBNK"
+              ]
+            ]
+          },
+          "market": {
+            "description": "Market: bist, us, or crypto",
+            "enum": [
+              "bist",
+              "us",
+              "crypto"
+            ],
+            "examples": [
+              "bist",
+              "us",
+              "crypto"
+            ],
+            "type": "string"
+          },
+          "exchange": {
+            "anyOf": [
+              {
+                "enum": [
+                  "btcturk",
+                  "coinbase"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Crypto exchange: btcturk or coinbase. Inferred from the pair when omitted."
+          },
+          "timeframe": {
+            "default": "1d",
+            "description": "Analysis timeframe: 1d (daily), 1h (hourly), 4h, 1W (weekly)",
+            "enum": [
+              "1m",
+              "5m",
+              "15m",
+              "30m",
+              "1h",
+              "4h",
+              "1d",
+              "1W"
+            ],
+            "type": "string"
+          },
+          "include_pivots": {
+            "default": false,
+            "description": "Also compute classic pivot points: PP, R1-R3, S1-S3, plus the nearest level and distance (bist and us only).",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "symbol",
+          "market"
+        ],
+        "type": "object",
+        "additionalProperties": false
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "get_analyst_data",
+      "description": "Get analyst ratings, price targets, and buy/sell/hold recommendations. Batch support up to 10.",
+      "parameters": {
+        "properties": {
+          "symbol": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            ],
+            "description": "Single ticker or list of tickers (max 10)",
+            "examples": [
+              "GARAN",
+              [
+                "GARAN",
+                "AKBNK"
+              ]
+            ]
+          },
+          "market": {
+            "description": "Market: bist or us",
+            "enum": [
+              "bist",
+              "us"
+            ],
+            "examples": [
+              "bist",
+              "us"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "symbol",
+          "market"
+        ],
+        "type": "object",
+        "additionalProperties": false
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "get_earnings",
+      "description": "Get earnings dates, EPS history, surprises, and growth estimates. Batch support up to 10.",
+      "parameters": {
+        "properties": {
+          "symbol": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            ],
+            "description": "Single ticker or list of tickers (max 10)",
+            "examples": [
+              "GARAN",
+              [
+                "GARAN",
+                "THYAO"
+              ]
+            ]
+          },
+          "market": {
+            "description": "Market: bist or us",
+            "enum": [
+              "bist",
+              "us"
+            ],
+            "examples": [
+              "bist",
+              "us"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "symbol",
+          "market"
+        ],
+        "type": "object",
+        "additionalProperties": false
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "get_financial_statements",
+      "description": "Get balance sheet, income statement, and cash flow (annual/quarterly). Batch support up to 10.",
+      "parameters": {
+        "properties": {
+          "symbol": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            ],
+            "description": "Single ticker or list of tickers (max 10)",
+            "examples": [
+              "SASA",
+              [
+                "SASA",
+                "AKSA",
+                "ALKIM"
+              ]
+            ]
+          },
+          "market": {
+            "description": "Market: bist or us",
+            "enum": [
+              "bist",
+              "us"
+            ],
+            "examples": [
+              "bist",
+              "us"
+            ],
+            "type": "string"
+          },
+          "statement_type": {
+            "default": "all",
+            "description": "Statement type: balance, income, cashflow, or all",
+            "enum": [
+              "balance",
+              "income",
+              "cashflow",
+              "all"
+            ],
+            "type": "string"
+          },
+          "period": {
+            "default": "annual",
+            "description": "Period: annual or quarterly",
+            "enum": [
+              "annual",
+              "quarterly"
+            ],
+            "type": "string"
+          },
+          "last_n": {
+            "anyOf": [
+              {
+                "maximum": 40,
+                "minimum": 1,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Number of periods to fetch (BIST only). Default 5 (returns ~4 recent quarters or ~4 years). Use 20 for ~5 years of quarterly data, 40 for max. IMPORTANT: If user asks for older data (e.g. '2023 Q2' or 'last 3 years'), increase last_n accordingly.",
+            "examples": [
+              4,
+              8,
+              12,
+              20
+            ]
+          }
+        },
+        "required": [
+          "symbol",
+          "market"
+        ],
+        "type": "object",
+        "additionalProperties": false
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "get_financial_ratios",
+      "description": "Get ratios: valuation (P/E, EV/EBITDA), Buffett analysis, health metrics, or comprehensive.",
+      "parameters": {
+        "properties": {
+          "symbol": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            ],
+            "description": "Symbol(s), max 10: 'GARAN' or ['GARAN', 'AKBNK']",
+            "examples": [
+              "GARAN",
+              "AAPL",
+              [
+                "GARAN",
+                "AKBNK"
+              ]
+            ]
+          },
+          "market": {
+            "description": "Market: bist or us",
+            "enum": [
+              "bist",
+              "us"
+            ],
+            "examples": [
+              "bist",
+              "us"
+            ],
+            "type": "string"
+          },
+          "ratio_set": {
+            "default": "valuation",
+            "description": "Ratio set: valuation, buffett, core_health, advanced, comprehensive",
+            "enum": [
+              "valuation",
+              "buffett",
+              "core_health",
+              "advanced",
+              "comprehensive"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "symbol",
+          "market"
+        ],
+        "type": "object",
+        "additionalProperties": false
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "get_corporate_actions",
+      "description": "What the company paid out or issued: dividends, stock splits, and (BIST) capital increases. Batch up to 10.",
+      "parameters": {
+        "properties": {
+          "symbol": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            ],
+            "description": "Single ticker or list of tickers (max 10)",
+            "examples": [
+              "GARAN",
+              [
+                "GARAN",
+                "THYAO"
+              ],
+              "KO"
+            ]
+          },
+          "market": {
+            "default": "bist",
+            "description": "Market: bist or us",
+            "enum": [
+              "bist",
+              "us"
+            ],
+            "examples": [
+              "bist",
+              "us"
+            ],
+            "type": "string"
+          },
+          "year": {
+            "anyOf": [
+              {
+                "maximum": 2030,
+                "minimum": 2000,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Filter capital increases by year (BIST only)"
+          }
+        },
+        "required": [
+          "symbol"
+        ],
+        "type": "object",
+        "additionalProperties": false
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "get_news",
+      "description": "Get KAP news list for a BIST stock, or fetch full news content by news_id.",
+      "parameters": {
+        "properties": {
+          "symbol": {
+            "anyOf": [
+              {
+                "pattern": "^[A-Za-z0-9.\\-]{1,20}$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Ticker symbol for news list (e.g., GARAN). Optional if news_id is provided.",
+            "examples": [
+              "GARAN",
+              "THYAO"
+            ]
+          },
+          "news_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "News ID or URL for detailed content. When provided, returns full news content.",
+            "examples": [
+              "https://www.kap.org.tr/tr/Bildirim/1234567"
+            ]
+          },
+          "limit": {
+            "default": 10,
+            "description": "Maximum news items (for list mode)",
+            "maximum": 50,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "page": {
+            "default": 1,
+            "description": "Page number for news detail (when news_id is provided)",
+            "minimum": 1,
+            "type": "integer"
+          }
+        },
+        "type": "object",
+        "additionalProperties": false
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "screen_securities",
+      "description": "Screen stocks/ETFs with 24 presets (value, growth, dividend, sector) or custom filters.",
+      "parameters": {
+        "properties": {
+          "market": {
+            "description": "Market: bist or us",
+            "enum": [
+              "bist",
+              "us"
+            ],
+            "examples": [
+              "bist",
+              "us"
+            ],
+            "type": "string"
+          },
+          "preset": {
+            "anyOf": [
+              {
+                "enum": [
+                  "value_stocks",
+                  "growth_stocks",
+                  "dividend_stocks",
+                  "large_cap",
+                  "mid_cap",
+                  "small_cap",
+                  "high_volume",
+                  "momentum",
+                  "undervalued",
+                  "low_pe",
+                  "high_dividend_yield",
+                  "blue_chip",
+                  "tech_sector",
+                  "healthcare_sector",
+                  "financial_sector",
+                  "energy_sector",
+                  "top_gainers",
+                  "top_losers",
+                  "most_active",
+                  "large_etfs",
+                  "top_performing_etfs",
+                  "low_expense_etfs",
+                  "large_mutual_funds",
+                  "top_performing_funds"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Preset screen: value_stocks, growth_stocks, dividend_stocks, large_cap, tech_sector, top_gainers, etc."
+          },
+          "security_type": {
+            "anyOf": [
+              {
+                "enum": [
+                  "equity",
+                  "etf",
+                  "mutualfund",
+                  "index",
+                  "future"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Security type for US: equity, etf, mutualfund (default: equity)"
+          },
+          "custom_filters": {
+            "anyOf": [
+              {
+                "items": {},
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Custom filters as list: [[\"eq\", [\"sector\", \"Technology\"]], [\"gt\", [\"intradaymarketcap\", 10000000000]]]"
+          },
+          "limit": {
+            "default": 25,
+            "description": "Maximum results",
+            "maximum": 250,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "help": {
+            "default": false,
+            "description": "Return this market's presets, filter fields and operators instead of running a screen. Cannot be combined with preset or custom_filters.",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "market"
+        ],
+        "type": "object",
+        "additionalProperties": false
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "scan_stocks",
+      "description": "Scan BIST stocks by technical indicators (RSI, MACD, Supertrend, T3). Use preset or custom condition.",
+      "parameters": {
+        "properties": {
+          "index": {
+            "anyOf": [
+              {
+                "enum": [
+                  "XU030",
+                  "XU100",
+                  "XBANK",
+                  "XUSIN",
+                  "XUMAL",
+                  "XUHIZ",
+                  "XUTEK",
+                  "XHOLD",
+                  "XGIDA",
+                  "XELKT",
+                  "XILTM",
+                  "XK100",
+                  "XK050",
+                  "XK030"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "BIST index to scan. Required unless help=True.",
+            "examples": [
+              "XU030",
+              "XU100",
+              "XBANK"
+            ]
+          },
+          "condition": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Custom: 'RSI < 30', 'supertrend_direction == 1'"
+          },
+          "preset": {
+            "anyOf": [
+              {
+                "enum": [
+                  "oversold",
+                  "oversold_moderate",
+                  "overbought",
+                  "overbought_warning",
+                  "oversold_high_volume",
+                  "bb_overbought_sell",
+                  "bb_oversold_buy",
+                  "bullish_momentum",
+                  "bearish_momentum",
+                  "big_gainers",
+                  "big_losers",
+                  "momentum_breakout",
+                  "ma_squeeze_momentum",
+                  "macd_positive",
+                  "macd_negative",
+                  "supertrend_bullish",
+                  "supertrend_bearish",
+                  "supertrend_bullish_oversold",
+                  "t3_bullish",
+                  "t3_bearish",
+                  "t3_bullish_momentum",
+                  "high_volume"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Preset: oversold, bullish_momentum, supertrend_bullish, t3_bullish, high_volume"
+          },
+          "timeframe": {
+            "default": "1d",
+            "description": "Timeframe: 1d, 1h, 4h, 1W",
+            "enum": [
+              "1d",
+              "1h",
+              "4h",
+              "1W"
+            ],
+            "type": "string"
+          },
+          "help": {
+            "default": false,
+            "description": "Return the available indicators, operators and presets instead of running a scan.",
+            "type": "boolean"
+          }
+        },
+        "type": "object",
+        "additionalProperties": false
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "compare_assets",
+      "description": "Compare period returns across markets in one table: BIST/US stocks, gold, FX, crypto and TEFAS funds, in both TRY and USD.",
+      "parameters": {
+        "properties": {
+          "assets": {
+            "description": "Assets to compare. Bare symbols are resolved automatically: BIST tickers (ASELS), US tickers (AAPL), FX and metals (USD, EUR, gram-altin, gram-gumus, BRENT), crypto pairs (BTCTRY, BTC-USD), TEFAS fund codes (TI2). If a symbol names an asset in two markets, the call fails and asks you to disambiguate.",
+            "examples": [
+              [
+                "ASELS",
+                "gram-altin",
+                "USD"
+              ],
+              [
+                "THYAO",
+                "BTCTRY",
+                "TI2"
+              ]
+            ],
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 10,
+            "minItems": 1,
+            "type": "array"
+          },
+          "start_date": {
+            "description": "Window start (YYYY-MM-DD). The entry price is the first session ON OR AFTER this date.",
+            "examples": [
+              "2026-01-02"
+            ],
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "type": "string"
+          },
+          "end_date": {
+            "anyOf": [
+              {
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Window end (YYYY-MM-DD). Defaults to today. The exit price is the last session on or before it."
+          },
+          "base_currency": {
+            "default": "TRY",
+            "description": "Currency the table is sorted by. Both TRY and USD returns are always reported.",
+            "enum": [
+              "TRY",
+              "USD"
+            ],
+            "type": "string"
+          },
+          "initial_amount": {
+            "anyOf": [
+              {
+                "exclusiveMinimum": 0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "If given, also report what this amount would have grown to, in both currencies.",
+            "examples": [
+              100000
+            ]
+          }
+        },
+        "required": [
+          "assets",
+          "start_date"
+        ],
+        "type": "object",
+        "additionalProperties": false
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "get_sector_comparison",
+      "description": "Get sector peers, average P/E and P/B, and comparative positioning for a stock.",
+      "parameters": {
+        "properties": {
+          "symbol": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            ],
+            "description": "Symbol(s), max 10: 'GARAN' or ['GARAN', 'AKBNK']",
+            "examples": [
+              "GARAN",
+              "AAPL",
+              [
+                "GARAN",
+                "AKBNK"
+              ]
+            ]
+          },
+          "market": {
+            "description": "Market: bist or us",
+            "enum": [
+              "bist",
+              "us"
+            ],
+            "examples": [
+              "bist",
+              "us"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "symbol",
+          "market"
+        ],
+        "type": "object",
+        "additionalProperties": false
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "get_crypto_market",
+      "description": "Get crypto ticker, orderbook, trades, or OHLC from BtcTurk (TRY) or Coinbase (USD).",
+      "parameters": {
+        "properties": {
+          "symbol": {
+            "description": "Trading pair symbol (e.g., BTCTRY, BTC-USD)",
+            "examples": [
+              "BTCTRY",
+              "ETHTRY",
+              "BTC-USD",
+              "ETH-USD"
+            ],
+            "pattern": "^[A-Za-z0-9.\\-]{1,20}$",
+            "type": "string"
+          },
+          "exchange": {
+            "description": "Exchange: btcturk (Turkish) or coinbase (Global)",
+            "enum": [
+              "btcturk",
+              "coinbase"
+            ],
+            "examples": [
+              "btcturk",
+              "coinbase"
+            ],
+            "type": "string"
+          },
+          "data_type": {
+            "default": "ticker",
+            "description": "Data type: ticker, orderbook, trades, exchange_info, ohlc",
+            "enum": [
+              "ticker",
+              "orderbook",
+              "trades",
+              "exchange_info",
+              "ohlc"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "symbol",
+          "exchange"
+        ],
+        "type": "object",
+        "additionalProperties": false
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "get_economic_calendar",
+      "description": "Get economic events for TR, US, EU, DE, GB, JP, CN with importance filter.",
+      "parameters": {
+        "properties": {
+          "country": {
+            "anyOf": [
+              {
+                "enum": [
+                  "TR",
+                  "US",
+                  "EU",
+                  "DE",
+                  "GB",
+                  "JP",
+                  "CN"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Country filter: TR, US, EU, DE, GB, JP, CN"
+          },
+          "importance": {
+            "anyOf": [
+              {
+                "enum": [
+                  "high",
+                  "medium",
+                  "low"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Importance filter"
+          },
+          "period": {
+            "default": "this_week",
+            "description": "Period: today, this_week, next_week",
+            "type": "string"
+          }
+        },
+        "type": "object",
+        "additionalProperties": false
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "get_bond_yields",
+      "description": "Get Turkish government bond yields (2Y, 5Y, 10Y) and risk-free rate for DCF calculations.",
+      "parameters": {
+        "properties": {
+          "country": {
+            "const": "TR",
+            "default": "TR",
+            "description": "Country: TR (Turkey is the only market served)",
+            "type": "string"
+          }
+        },
+        "type": "object",
+        "additionalProperties": false
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "get_fund_data",
+      "description": "Get TEFAS fund info with returns (daily/weekly/1m/3m/6m/1y/3y/5y), portfolio, or compare funds. Supports custom date range.",
+      "parameters": {
+        "properties": {
+          "symbol": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Single fund code or list of fund codes for comparison (max 10). Not needed when data_type='regulations'.",
+            "examples": [
+              "TPC",
+              [
+                "TPC",
+                "TI2",
+                "NMG"
+              ]
+            ]
+          },
+          "data_type": {
+            "default": "fund",
+            "description": "'fund' (default) returns fund data. 'regulations' returns the Turkish investment fund regulations (CMB rules) and needs no symbol.",
+            "enum": [
+              "fund",
+              "regulations"
+            ],
+            "type": "string"
+          },
+          "include_portfolio": {
+            "default": false,
+            "description": "Include the asset-type breakdown (single fund only) as portfolio={date, allocation:[{code, label, weight}]}, weights in percent, largest first. With start_date/end_date it also returns portfolio_history, one entry per publication day in that window.",
+            "type": "boolean"
+          },
+          "include_performance": {
+            "default": false,
+            "description": "Include historical performance data (single fund only)",
+            "type": "boolean"
+          },
+          "compare_mode": {
+            "default": false,
+            "description": "Enable comparison mode for multiple funds",
+            "type": "boolean"
+          },
+          "start_date": {
+            "anyOf": [
+              {
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Custom range start date (YYYY-MM-DD) for calculating custom_return",
+            "examples": [
+              "2024-01-01",
+              "2025-06-15"
+            ]
+          },
+          "end_date": {
+            "anyOf": [
+              {
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Custom range end date (YYYY-MM-DD). Defaults to today if start_date is set",
+            "examples": [
+              "2024-12-31",
+              "2026-01-15"
+            ]
+          }
+        },
+        "type": "object",
+        "additionalProperties": false
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "screen_funds",
+      "description": "Screen and filter TEFAS funds by type, category, returns, and sort criteria. Find top performing funds.",
+      "parameters": {
+        "properties": {
+          "fund_type": {
+            "default": "YAT",
+            "description": "Fund type: YAT=Investment Funds (Yatırım Fonları), EMK=Pension Funds (Emeklilik Fonları)",
+            "enum": [
+              "YAT",
+              "EMK"
+            ],
+            "examples": [
+              "YAT",
+              "EMK"
+            ],
+            "type": "string"
+          },
+          "category": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Fund category filter (e.g., 'Para Piyasası', 'Değişken', 'Hisse Senedi', 'Borçlanma Araçları')",
+            "examples": [
+              "Para Piyasası",
+              "Değişken",
+              "Hisse Senedi"
+            ]
+          },
+          "min_return_1m": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Minimum 1-month return (%)",
+            "examples": [
+              5.0,
+              10.0
+            ]
+          },
+          "min_return_1y": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Minimum 1-year return (%)",
+            "examples": [
+              20.0,
+              50.0
+            ]
+          },
+          "sort_by": {
+            "default": "return_1y",
+            "description": "Sort results by this return period",
+            "enum": [
+              "return_1m",
+              "return_3m",
+              "return_6m",
+              "return_1y",
+              "return_3y",
+              "weekly_return"
+            ],
+            "examples": [
+              "return_1y",
+              "weekly_return"
+            ],
+            "type": "string"
+          },
+          "limit": {
+            "default": 20,
+            "description": "Maximum number of results (1-100)",
+            "maximum": 100,
+            "minimum": 1,
+            "type": "integer"
+          }
+        },
+        "type": "object",
+        "additionalProperties": false
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "get_index_data",
+      "description": "Get index value, change, and optionally component stocks (BIST: XU100, XU030; US: SPY, QQQ).",
+      "parameters": {
+        "properties": {
+          "code": {
+            "description": "Index code (e.g., XU100, XU030, XBANK, SPY, QQQ)",
+            "examples": [
+              "XU100",
+              "XU030",
+              "XBANK",
+              "SPY"
+            ],
+            "pattern": "^[A-Za-z0-9.\\-]{1,20}$",
+            "type": "string"
+          },
+          "market": {
+            "description": "Market: bist or us",
+            "enum": [
+              "bist",
+              "us"
+            ],
+            "examples": [
+              "bist",
+              "us"
+            ],
+            "type": "string"
+          },
+          "include_components": {
+            "default": false,
+            "description": "Include list of component stocks",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "code",
+          "market"
+        ],
+        "type": "object",
+        "additionalProperties": false
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "get_macro_data",
+      "description": "Inflation data and cumulative purchasing-power calculation for Turkey (TÜFE/ÜFE), the US (CPI-U), or the euro area (HICP).",
+      "parameters": {
+        "properties": {
+          "data_type": {
+            "description": "Data type: 'inflation' for rates, 'calculate' for cumulative calculation",
+            "enum": [
+              "inflation",
+              "calculate"
+            ],
+            "examples": [
+              "inflation",
+              "calculate"
+            ],
+            "type": "string"
+          },
+          "region": {
+            "default": "tr",
+            "description": "Region: 'tr' (TÜFE/ÜFE, TRY), 'us' (CPI-U, USD), 'eu' (HICP, EUR). US and EU publish a headline index only, so inflation_type does not apply there.",
+            "enum": [
+              "tr",
+              "us",
+              "eu"
+            ],
+            "examples": [
+              "tr",
+              "us",
+              "eu"
+            ],
+            "type": "string"
+          },
+          "inflation_type": {
+            "anyOf": [
+              {
+                "enum": [
+                  "tufe",
+                  "ufe"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "TR only: tufe (CPI) or ufe (PPI). Defaults to tufe for region='tr'; supplying it with region='us'/'eu' is an error."
+          },
+          "start_date": {
+            "anyOf": [
+              {
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Start date for inflation data (YYYY-MM-DD)"
+          },
+          "end_date": {
+            "anyOf": [
+              {
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "End date for inflation data (YYYY-MM-DD)"
+          },
+          "start_year": {
+            "anyOf": [
+              {
+                "minimum": 1913,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Start year for calculation mode (US series reaches back to 1913)"
+          },
+          "start_month": {
+            "anyOf": [
+              {
+                "maximum": 12,
+                "minimum": 1,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Start month for calculation mode (1-12)"
+          },
+          "end_year": {
+            "anyOf": [
+              {
+                "minimum": 1913,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "End year for calculation mode"
+          },
+          "end_month": {
+            "anyOf": [
+              {
+                "maximum": 12,
+                "minimum": 1,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "End month for calculation mode (1-12)"
+          },
+          "basket_value": {
+            "default": 100.0,
+            "description": "Initial basket value for calculation (default: 100)",
+            "minimum": 0,
+            "type": "number"
+          },
+          "limit": {
+            "anyOf": [
+              {
+                "maximum": 500,
+                "minimum": 1,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Maximum data points for inflation data"
+          }
+        },
+        "required": [
+          "data_type"
+        ],
+        "type": "object",
+        "additionalProperties": false
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "get_evds_data",
+      "description": "MACRO: TCMB EVDS - 145 categories, tens of thousands of macro series (rates, FX, balance of payments, inflation, expectation surveys). Use action to browse catalog, search, fetch series, or access dashboards. Catalog and search work without a key; data fetch (series, multi_series, datagroup_data) requires EVDS_API_KEY env var (free at https://evds3.tcmb.gov.tr). Required params by action: datagroups→category_id; series_list/datagroup_data→datagroup_code; search/search_server→keyword; series/series_info→series_code; multi_series→series_codes; dashboard→dashboard_name or dashboard_id.",
+      "parameters": {
+        "properties": {
+          "action": {
+            "description": "EVDS operation. No key: categories, datagroups, series_list, search, search_server, series_info, dashboards. Key required: series, multi_series, datagroup_data, dashboard.",
+            "enum": [
+              "categories",
+              "datagroups",
+              "series_list",
+              "search",
+              "search_server",
+              "series_info",
+              "dashboards",
+              "dashboard",
+              "series",
+              "multi_series",
+              "datagroup_data"
+            ],
+            "examples": [
+              "categories",
+              "search",
+              "series",
+              "datagroup_data"
+            ],
+            "type": "string"
+          },
+          "category_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Numeric category ID for action='datagroups'. Get IDs from action='categories'.",
+            "examples": [
+              400401,
+              2501
+            ]
+          },
+          "datagroup_code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Datagroup code for action='series_list' or 'datagroup_data'.",
+            "examples": [
+              "bie_dkdovizgn",
+              "bie_dkdovytl"
+            ]
+          },
+          "keyword": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Search keyword for action='search' or 'search_server'.",
+            "examples": [
+              "dollar",
+              "inflation",
+              "deposit rate",
+              "dolar"
+            ]
+          },
+          "scope": {
+            "anyOf": [
+              {
+                "enum": [
+                  "all",
+                  "datagroups",
+                  "series"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": "all",
+            "description": "Scope filter for client-side search (action='search')."
+          },
+          "lang": {
+            "anyOf": [
+              {
+                "enum": [
+                  "TR",
+                  "EN"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": "TR",
+            "description": "Language for client-side search titles (TR or EN)."
+          },
+          "series_code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "EVDS series code for action='series' or 'series_info'.",
+            "examples": [
+              "TP.DK.USD.A.YTL",
+              "TP.FG.J0",
+              "TP.APIFON4"
+            ]
+          },
+          "series_codes": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "maxItems": 20,
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "List of EVDS series codes for action='multi_series' (max 20)."
+          },
+          "period": {
+            "anyOf": [
+              {
+                "enum": [
+                  "1mo",
+                  "3mo",
+                  "6mo",
+                  "1y",
+                  "2y",
+                  "5y",
+                  "max"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": "1y",
+            "description": "Time period. Ignored when start_date is provided."
+          },
+          "start_date": {
+            "anyOf": [
+              {
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Start date YYYY-MM-DD. Overrides 'period' when set."
+          },
+          "end_date": {
+            "anyOf": [
+              {
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "End date YYYY-MM-DD. Optional with start_date."
+          },
+          "frequency": {
+            "anyOf": [
+              {
+                "enum": [
+                  "daily",
+                  "workday",
+                  "weekly",
+                  "biweekly",
+                  "monthly",
+                  "quarterly",
+                  "semiannual",
+                  "annual"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Resampling frequency. Defaults to series native frequency."
+          },
+          "aggregation": {
+            "anyOf": [
+              {
+                "enum": [
+                  "avg",
+                  "min",
+                  "max",
+                  "first",
+                  "last",
+                  "sum"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Aggregation method when resampling. Defaults to series default."
+          },
+          "formula": {
+            "anyOf": [
+              {
+                "enum": [
+                  "level",
+                  "pct_change",
+                  "diff",
+                  "yoy_pct",
+                  "yoy_diff",
+                  "moving_avg",
+                  "moving_sum",
+                  "yoy_moving_pct",
+                  "yoy_moving_diff"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": "level",
+            "description": "Transformation: raw level, pct_change, year-over-year %, moving avg, etc."
+          },
+          "decimals": {
+            "anyOf": [
+              {
+                "maximum": 6,
+                "minimum": 0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Number of decimal places in returned values (0-6)."
+          },
+          "dashboard_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Dashboard slug for action='dashboard' (e.g. 'baslica-gostergeler')."
+          },
+          "dashboard_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Dashboard encoded ID (base64-like string) for action='dashboard', alternative to dashboard_name. Get IDs from action='dashboards'.",
+            "examples": [
+              "Njk3MjI0ODNmYTZlZDc0NGFhNzVjMjI3"
+            ]
+          },
+          "limit": {
+            "anyOf": [
+              {
+                "maximum": 5000,
+                "minimum": 1,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": 100,
+            "description": "Max observations / records returned per series (payload safety cap). Default 100 keeps responses compact; raise it (max 5000) only when long history is genuinely needed."
+          }
+        },
+        "required": [
+          "action"
+        ],
+        "type": "object",
+        "additionalProperties": false
+      }
+    }
+  }
+]

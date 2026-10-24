@@ -1,0 +1,17 @@
+{
+  "type": "function",
+  "function": {
+    "name": "web_search",
+    "description": "Güncel web kaynaklarında arama yapar; finans, banka ve mevzuat sorularında resmî kaynakları filtreleyebilir.",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "query": {"type": "string", "minLength": 3},
+        "domains": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "recency_days": {"type": "integer", "minimum": 1}
+      },
+      "required": ["query"],
+      "additionalProperties": false
+    }
+  }
+}

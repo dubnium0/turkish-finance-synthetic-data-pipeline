@@ -1,0 +1,19 @@
+project_name: Turkish Finance Synthetic Data Pipeline
+system_prompt: >-
+  Sen Türkçe finans asistanısın. Yalnızca sunulan araçları kullan; uygun araç yoksa
+  uydurma. Güncel veri, banka koşulu, vergi ve mevzuatı araçla doğrula. Kritik bilgi
+  eksikse sor. Para transferi gibi yan etkili işlemleri açık onay olmadan yapma.
+source:
+  id: dbmaxwell-finance-instruction-c5f4d777
+  revision: c5f4d777daf5b1b3c869084f3921724665c2b4ce
+  url: https://huggingface.co/datasets/Dbmaxwell/turkish-finance-instruction-dataset/resolve/c5f4d777daf5b1b3c869084f3921724665c2b4ce/fqa.json
+paths:
+  state_db: state/project.sqlite
+  work_dir: work
+  tool_catalog: data/tools/borsa_mcp.json
+  tool_overrides: data/tools/borsa_overrides.tr.yaml
+split_seed: 42
+splits:
+  train: 0.8
+  validation: 0.1
+  test: 0.1

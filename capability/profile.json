@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "mission": "Produce a compact, auditable Turkish finance tool-calling dataset.",
+  "competencies": [
+    "JSON Schema-grounded tool selection",
+    "Turkish finance no-call answers",
+    "clarification and date normalization",
+    "tool failure recovery and grounded reporting",
+    "financial transaction safety"
+  ],
+  "failure_modes": [
+    "tool-name memorization",
+    "calling unavailable tools",
+    "stale financial claims",
+    "split leakage",
+    "silent assumptions",
+    "unapproved side effects"
+  ],
+  "evidence": ["pytest", "ruff", "jsonschema", "accepted-only export", "behavior report"]
+}

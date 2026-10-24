@@ -1,0 +1,155 @@
+get_quote:
+  description: Hisse, döviz, değerli metal ve kripto varlıkların güncel fiyatını getirir.
+  parameters:
+    symbol: Sembol veya sembol listesi; örnekler GARAN, AAPL, gram-altin ve BTCTRY.
+    market: Piyasa türü; bist, us, fx veya crypto.
+get_historical_data:
+  description: BIST, ABD, döviz, fon ve kripto varlıkların tarihsel fiyat verisini getirir.
+  parameters:
+    symbol: Finansal varlık sembolü veya sembol listesi.
+    market: Piyasa türü; bist, us, fx, crypto veya fund.
+    period: Hazır dönem; açık tarih aralığıyla birlikte kullanılmaz.
+    start_date: Başlangıç tarihi, YYYY-MM-DD.
+    end_date: Bitiş tarihi, YYYY-MM-DD.
+get_financial_statements:
+  description: Şirketin bilanço, gelir tablosu ve nakit akışı tablolarını getirir.
+  parameters:
+    symbol: Şirket sembolü veya sembol listesi.
+    market: Piyasa; bist veya us.
+    statement_type: Tablo türü; balance, income, cashflow veya all.
+    period: Rapor dönemi; annual veya quarterly.
+get_news:
+  description: BIST şirketleri için KAP bildirim listesini veya tam bildirim içeriğini getirir.
+  parameters:
+    symbol: KAP bildirimleri aranacak şirket sembolü.
+    news_id: Tam içeriği getirilecek bildirim kimliği veya URL'si.
+get_fund_data:
+  description: TEFAS fon bilgisi, performansı, portföy dağılımı ve fon karşılaştırması getirir.
+  parameters:
+    symbol: Tek fon kodu veya karşılaştırılacak fon kodları.
+    start_date: Başlangıç tarihi, YYYY-MM-DD.
+    end_date: Bitiş tarihi, YYYY-MM-DD.
+get_evds_data:
+  description: TCMB EVDS kataloğunda arama yapar; makroekonomik serileri ve gözlemleri getirir.
+  parameters:
+    action: EVDS işlemi; arama, seri bilgisi veya veri getirme eylemi.
+    keyword: EVDS kataloğunda aranacak ifade.
+    series_code: Verisi getirilecek EVDS seri kodu.
+    start_date: Başlangıç tarihi, YYYY-MM-DD.
+    end_date: Bitiş tarihi, YYYY-MM-DD.
+search_symbol:
+  description: BIST, ABD, kripto ve fon piyasalarında isim veya sembolle hisse, endeks, fon ve kripto arar.
+  parameters:
+    query: Arama ifadesi; şirket adı, kod veya anahtar kelime.
+    market: Hedef piyasa; bist, us, crypto veya fund.
+    limit: En fazla sonuç sayısı, 1 ile 50 arası.
+get_profile:
+  description: Sektör, finansal bilgiler, temel metrikler ve isteğe bağlı katılım uygunluğuyla şirket profili getirir.
+  parameters:
+    symbol: Sembol veya sembol listesi, en fazla 10 adet.
+    market: Piyasa; bist, us veya fund.
+    include_islamic: Katılım uygunluk bilgisini dahil eder, yalnızca BIST.
+get_technical_analysis:
+  description: RSI, MACD, Bollinger Bantları, hareketli ortalamalar ve trend sinyalleri gibi teknik göstergeleri getirir.
+  parameters:
+    symbol: Sembol veya sembol listesi, en fazla 10 adet.
+    market: Piyasa; bist, us veya crypto.
+    exchange: Kripto borsası; btcturk veya coinbase. Verilmezse çiftten çıkarılır.
+    timeframe: Analiz zaman dilimi; 1d günlük, 1h saatlik, 4h veya 1W haftalık.
+    include_pivots: Klasik pivot noktalarını da hesaplar; yalnızca bist ve us.
+get_analyst_data:
+  description: Analist derecelendirmeleri, hedef fiyatlar ve al, tut, sat tavsiyelerini getirir.
+  parameters:
+    symbol: Tek sembol veya sembol listesi, en fazla 10 adet.
+    market: Piyasa; bist veya us.
+get_earnings:
+  description: Kâr açıklama tarihleri, EPS geçmişi, sürprizler ve büyüme tahminlerini getirir.
+  parameters:
+    symbol: Tek sembol veya sembol listesi, en fazla 10 adet.
+    market: Piyasa; bist veya us.
+get_financial_ratios:
+  description: Değerleme, Buffett analizi, finansal sağlık veya kapsamlı oran setlerini getirir.
+  parameters:
+    symbol: Sembol veya sembol listesi, en fazla 10 adet.
+    market: Piyasa; bist veya us.
+    ratio_set: Oran seti; valuation, buffett, core_health, advanced veya comprehensive.
+get_corporate_actions:
+  description: Şirketin ödediği veya ihraç ettiği değerleri getirir; temettüler, bölünmeler ve BIST sermaye artırımları.
+  parameters:
+    symbol: Tek sembol veya sembol listesi, en fazla 10 adet.
+    market: Piyasa; bist veya us.
+    year: Sermaye artırımlarını yıla göre süzer, yalnızca BIST.
+screen_securities:
+  description: Hazır presetler veya özel filtrelerle hisse ve ETF taraması yapar.
+  parameters:
+    market: Piyasa; bist veya us.
+    preset: Hazır tarama; value_stocks, growth_stocks, top_gainers ve benzerleri.
+    security_type: ABD için menkul türü; equity, etf veya mutualfund.
+    custom_filters: Liste biçiminde özel filtreler.
+    limit: En fazla sonuç sayısı.
+    help: Tarama yapmadan preset ve filtre dokümantasyonunu döndürür.
+scan_stocks:
+  description: Teknik göstergelere göre BIST hisselerini tarar; hazır preset veya özel koşul kullanılır.
+  parameters:
+    index: Taranacak BIST endeksi; help True değilse zorunludur.
+    condition: Özel koşul; örneğin RSI 30 altı.
+    preset: Hazır preset; oversold, bullish_momentum, supertrend_bullish ve benzerleri.
+    timeframe: Zaman dilimi; 1d, 1h, 4h veya 1W.
+    help: Kullanılabilir gösterge ve presetleri döndürür.
+compare_assets:
+  description: Dönem getirilerini tek tabloda karşılaştırır; BIST ve ABD hisseleri, altın, döviz, kripto ve TEFAS fonları, hem TL hem USD bazında.
+  parameters:
+    assets: Karşılaştırılacak varlıklar; yalın semboller otomatik çözülür.
+    start_date: Pencere başlangıcı, YYYY-MM-DD. Giriş fiyatı bu tarihte veya sonrasındaki ilk seanstan alınır.
+    end_date: Pencere bitişi, YYYY-MM-DD. Verilmezse bugündür.
+    base_currency: Tablonun sıralandığı para birimi; TRY veya USD.
+    initial_amount: Verilirse tutarın neye büyüyeceğini de raporlar.
+get_sector_comparison:
+  description: Sektör emsallerini, ortalama F/K ve PD/DD değerlerini ve hissenin göreli konumunu getirir.
+  parameters:
+    symbol: Sembol veya sembol listesi, en fazla 10 adet.
+    market: Piyasa; bist veya us.
+get_crypto_market:
+  description: BtcTurk veya Coinbase üzerinden kripto anlık fiyat, emir defteri, işlem veya OHLC verisi getirir.
+  parameters:
+    symbol: İşlem çifti sembolü; örneğin BTCTRY veya BTC-USD.
+    exchange: Borsa; btcturk veya coinbase.
+    data_type: Veri türü; ticker, orderbook, trades, exchange_info veya ohlc.
+get_economic_calendar:
+  description: TR, US, EU, DE, GB, JP ve CN için önem filtresiyle ekonomik olayları getirir.
+  parameters:
+    country: Ülke filtresi; TR, US, EU, DE, GB, JP veya CN.
+    importance: Önem düzeyi filtresi; high, medium veya low.
+    period: Dönem; today, this_week veya next_week.
+get_bond_yields:
+  description: Türkiye devlet tahvili getirilerini ve DCF hesabı için risksiz faiz oranını getirir.
+  parameters:
+    country: Ülke; yalnızca TR desteklenir.
+screen_funds:
+  description: TEFAS fonlarını tür, kategori, getiri ve sıralama ölçütlerine göre süzer; en iyi performanslı fonları bulur.
+  parameters:
+    fund_type: Fon türü; YAT yatırım fonları, EMK emeklilik fonları.
+    category: Fon kategori filtresi.
+    min_return_1m: En az 1 aylık getiri yüzdesi.
+    min_return_1y: En az 1 yıllık getiri yüzdesi.
+    sort_by: Sonuçların sıralanacağı getiri dönemi.
+    limit: En fazla sonuç sayısı, 1 ile 100 arası.
+get_index_data:
+  description: Endeks değerini, değişimini ve isteğe bağlı bileşen hisselerini getirir.
+  parameters:
+    code: Endeks kodu; örneğin XU100, XU030, XBANK, SPY veya QQQ.
+    market: Piyasa; bist veya us.
+    include_components: Bileşen hisse listesini dahil eder.
+get_macro_data:
+  description: Türkiye, ABD veya Euro Bölgesi enflasyon verilerini ve kümülatif satın alma gücü hesabını getirir.
+  parameters:
+    data_type: Veri türü; oranlar için inflation, kümülatif hesap için calculate.
+    region: Bölge; tr, us veya eu.
+    inflation_type: Yalnızca TR; tufe veya ufe.
+    start_date: Enflasyon verisi başlangıç tarihi, YYYY-MM-DD.
+    end_date: Enflasyon verisi bitiş tarihi, YYYY-MM-DD.
+    start_year: Hesaplama modu başlangıç yılı.
+    start_month: Hesaplama modu başlangıç ayı, 1 ile 12 arası.
+    end_year: Hesaplama modu bitiş yılı.
+    end_month: Hesaplama modu bitiş ayı, 1 ile 12 arası.
+    basket_value: Hesaplama için başlangıç sepet değeri.

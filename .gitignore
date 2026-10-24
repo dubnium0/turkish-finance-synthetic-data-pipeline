@@ -1,0 +1,50 @@
+# Yerel kürasyon durumu ve yeniden üretilebilir çıktılar
+state/
+work/
+
+# Python ortamı ve önbellekleri
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.pyright/
+.tox/
+.nox/
+
+# Test, kapsam ve paketleme çıktıları
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+dist/
+build/
+site/
+*.egg-info/
+
+# Sırlar ve makineye özgü ayarlar
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+credentials.json
+secrets.json
+
+# Günlükler, geçici dosyalar ve editör ayarları
+*.log
+*.tmp
+*.temp
+*.bak
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
