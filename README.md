@@ -11,6 +11,18 @@ This repository captures the pipeline that emerged from solving those failures o
 one. It is intentionally small, inspectable, and designed to be understood by both
 human maintainers and coding agents.
 
+## Start with a coding agent
+
+Choose your agent to open a ready-to-copy repository prompt:
+
+[**Codex**](AGENT_PROMPT.md#codex) ·
+[**Claude Code**](AGENT_PROMPT.md#claude-code) ·
+[**Hermes Agent**](AGENT_PROMPT.md#hermes-agent) ·
+[**Other agents**](AGENT_PROMPT.md#other-coding-agents)
+
+Each prompt starts from the repository contract in `AGENTS.md`, loads the relevant skill,
+and requires the project checks before completion.
+
 ## What this repository contains
 
 The pipeline turns source material and tool schemas into reviewed training records through
